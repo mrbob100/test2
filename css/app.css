@@ -1,0 +1,16 @@
+.wrap {
+    width: 100%; /* Ширина таблицы */
+    background: grey; /* Цвет фона таблицы */
+    color: black; /* Цвет текста */
+    border-spacing: 1px; /* Расстояние между ячейками */
+}
+td, th {
+    background-color: #E1E1E2;/* Цвет фона ячеек */
+    padding: 55px; /* Поля вокруг текста */
+}
+
+input:invalid:not(:placeholder-shown) {border-color: red;}
+input:valid:not(:placeholder-shown) {border-color: green;}
+
+
+
