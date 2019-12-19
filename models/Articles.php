@@ -5,7 +5,7 @@
  * Date: 06.12.19
  * Time: 8:31
  */
-
+require_once(ROOT . '/controllers/Controller.php');
 
 class Articles
 {
@@ -35,10 +35,13 @@ class Articles
 
     }
 
+
+
     /**
      * Returns an array of news items
      */
-    public static function getArticlesList() {               // программа вывода списка статей
+    public static function getArticlesList($kind) {                       // программа вывода списка статей
+
 
 
         $db = Db::getConnection(); // соединение с БД
@@ -48,13 +51,28 @@ class Articles
 
 // include the pagination class
 
-        $db->query("SET CHARACTER SET utf8");
-        $result = $db->query('SELECT id, user_id, name, text, status FROM articles ORDER BY id ASC LIMIT 10');
+       // $db->query("SET CHARACTER SET utf8");
+
+
+
+        if($kind=='app') {
+            $result = $db->query('SELECT articles.id, user_id, name, text, status, email FROM articles, users WHERE user_id=users.id  ORDER BY id ASC');
+                         }
+        if($kind=='oran'){
+            $result = $db->query('SELECT articles.id, user_id, name, text, status, email FROM articles, users WHERE user_id=users.id  ORDER BY FIELD(user_id ) ASC');
+        }
+        if($kind=='pine') {
+           $result = $db->query('SELECT articles.id, user_id, name, text, status, users.email FROM articles, users WHERE user_id=users.id  ORDER BY articles.name ASC');
+          // $result = $db->query( 'SELECT * FROM articles,  AS a LEFT JOIN users AS m  ON a.user_id=m.id ORDERED BY `a.name`');
+        }  /*else {
+
+            $result = $db->query('SELECT articles.id, user_id, name, text, status, email FROM articles, users WHERE user_id=users.id  ORDER BY id ASC');
+        } */
 
         $i = 0;
         while($row = $result->fetch()) {
             $ArticleList[$i]['id'] = $row['id'];
-            $ArticleList[$i]['user_id'] = $row['user_id'];
+            $ArticleList[$i]['user_id'] = $row['email'];
             $ArticleList[$i]['name'] = $row['name'];
             $ArticleList[$i]['text'] = $row['text'];
             $ArticleList[$i]['status'] = $row['status'];
@@ -66,9 +84,12 @@ class Articles
 
     }
 
+
+
+
     public static function addArticlesItem()     // программа добавления  статеьи к списку
     {
-        session_start();
+
         $db = Db::getConnection();               // соединение с БД
 
 
@@ -80,7 +101,7 @@ class Articles
             $pwd = password_hash($password,PASSWORD_DEFAULT);
 
             $text = htmlentities($_POST['text']);
-            $record='';
+
 
             if(!empty($login)&& !empty($password)&&!empty($email)) {
 
@@ -92,19 +113,27 @@ class Articles
                                     $user=$result->fetch(PDO::FETCH_OBJ);
                                     if($user) {
 
-                                        if(password_verify($password, $user->password)){
+                                        if($login==$user->login && $email==$user->email && password_verify($password, $user->password)){
 
                                             $id=$user->id;
 
                                            if($user->login=="admin") {
                                                $_SESSION['message']='admin';
+                                               $_SESSION['login']='admin';
                                                 return;
                                             }
 
                                         }
+
+
+
                                     }
 
+                                if($login=="admin") {
+                                    $_SESSION['message']='not_admin';
+                                    return;
 
+                                }
 
                             }
 
@@ -112,6 +141,8 @@ class Articles
                                 echo 'Error : ' . $e->getMessage();
                                 exit();
                             }
+
+
 
             if($id==0) {
                         try {
@@ -177,10 +208,9 @@ class Articles
 
         }
 
-
-
-
         }
+
+
 
 
 
@@ -199,7 +229,6 @@ class Articles
 
 
         }
-         /* $record = $db->query( "SELECT * FROM articles WHERE id=$id"); */
             $record = $db->query("UPDATE articles  SET text='$text',status='$status' WHERE id='$id'");
         echo " Запись откорректирована успешно !";
 

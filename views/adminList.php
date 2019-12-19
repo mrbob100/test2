@@ -26,6 +26,12 @@
 <div id="content">
     <div class="container table-block">
         <div class="row table-cell-block">
+            <div>
+                <?php if ($_SESSION['message'])  echo ($_SESSION['message'])?>
+
+
+            </div>
+
             <div class="col-sm-12">
 
                 <h3>Лист администратора </h3>
@@ -48,6 +54,7 @@
 
 
                 <?php foreach( $articles as $item): ?>
+                    <?php if ($item['name'] == "admin") continue; ?>
 
                     <tr>
 
@@ -78,6 +85,8 @@
         // render the pagination links
         $pagination->render();
         ?>
+
+        <a href="?option=form">выход </a>
     </div>
 </div>
 </div>

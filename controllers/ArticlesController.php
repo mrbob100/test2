@@ -9,45 +9,53 @@
 
 
 include_once ROOT. '/models/Articles.php';
-include_once ROOT. '/views/View.php';
-//include_once ROOT. '/config/routes.php';
+//include_once ROOT. '/views/View.php';
 
-//include_once ROOT. '/components/Router.php';
 
-class ArticlesController  {
+include_once ROOT. '/controllers/Controller.php';
 
-   private $view;
-    private $pageTpl = '/views/index.php';
+
+class ArticlesController  extends  Controller {
+
+ /*  public $view;
+   protected $articles;
+   protected $pagination;
+   // public $pageTpl = '/views/index.php';
     public function __construct() {
         $this->view = new View();
 
-    }
+    } */
 
     public function actionIndex()
     {
 
-      //$articles = [];
+
+        if(isset($_POST['data'])) {
+            $this->sqrc= $_POST['data'] ;
+       //     ob_start();
+       //     $pagination= $this->getArticles();
+        //    $articles=$this->articles;
+       //    require_once(ROOT . '/views/index.php');
+
+         //   $content = ob_get_contents();
+
+// отключаем и очищаем буфер
+      //     ob_end_clean();
 
 
-       $records_per_page = 3;
-        require (ROOT.'/vendor/stefangabos/zebra_pagination/Zebra_Pagination.php');
-        $pagination = new Zebra_Pagination();
+      //      return $res;
+        }
 
-        $articles= Articles::getArticlesList();
-        $pagination->records(count($articles));
-
-        $pagination->records_per_page($records_per_page);
-        $articles= array_slice(
-            $articles,
-            (($pagination->get_page() - 1) * $records_per_page),
-            $records_per_page
-        );
+            $pagination= $this->getArticles($this->sqrc);
+        $articles=$this->articles;
 
 
-       require_once(ROOT . '/views/index.php');
+
+      require_once(ROOT . '/views/index.php');
 
 
-      //  $this->view->render($this->pageTpl, $art);
+      // $this->view->render($this->pageTpl, ['articles'=>$articles,'pagination'=>$pagination]);
+
 
        return true;
 
@@ -67,39 +75,63 @@ class ArticlesController  {
         return true;
 
     }
-    public function  actionInsert(){
-        Articles::addArticlesItem();
-        $message=$_SESSION['message'];
-        if($message=='admin') {
-           // $articles= Articles::getArticlesList();
-            $records_per_page = 3;
-            require (ROOT.'/vendor/stefangabos/zebra_pagination/Zebra_Pagination.php');
-            $pagination = new Zebra_Pagination();
 
-            $articles= Articles::getArticlesList();
-            $pagination->records(count($articles));
 
-            $pagination->records_per_page($records_per_page);
-            $articles= array_slice(
-                $articles,
-                (($pagination->get_page() - 1) * $records_per_page),
-                $records_per_page
-            );
+    public function  actionInsert()
+    {
+
+           $a=isset($_SESSION['login']);
+
+            If(!$a) {
+                Articles::addArticlesItem();
+            }
+
+            $pagination = $this->getArticles($this->sqrc);
+            $articles = $this->articles;
 
             require_once(ROOT . '/views/adminList.php');
 
 
-        }
-        return true;
 
-    }
+
+
+           $message = $_SESSION['message'];
+           if ($message == 'not_admin') {
+               $_SESSION['message'] = 'Не правильные идентификационные данные !';
+
+               $pagination = $this->getArticles($this->sqrc);
+               $articles = $this->articles;
+
+               require_once(ROOT . '/views/default.php');
+
+           }
+
+           if ($message == 'admin') {
+                $this->key="admin";
+               $pagination = $this->getArticles($this->sqrc);
+               $articles = $this->articles;
+
+               require_once(ROOT . '/views/adminList.php');
+
+               $_SESSION['message'] = "";
+           }
+
+           return true;
+
+       }
+
+
+
 
     public function actionAdmin($id){
        $item= Articles::getArticlesItemByID($id);
         require_once(ROOT . '/views/single.php');
+
         return;
 
     }
+
+
 
     public function actionEdit($id)
     {

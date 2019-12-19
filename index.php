@@ -15,7 +15,8 @@ require_once(ROOT.'/components/Db.php');
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-
+$_SESSION['message'] ="";
 $router =new Router();
 
 $router->run();
+

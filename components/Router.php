@@ -51,7 +51,19 @@ class Router
 
                 /*				echo '<br>Нужно сформулировать: '.$internalRoute.'<br>'; */
 
-                $segments = explode('/', $internalRoute);
+
+                /*        $a=stristr($internalRoute,'&',true);
+
+        if(!$a) {
+                $segments=explode('/', $internalRoute);
+               } else {
+                $segments=explode('/', $a);
+            } */
+
+
+                $segments=explode('/', $internalRoute);
+
+
 
                 $controllerName = array_shift($segments).'Controller';
                 $controllerName = ucfirst($controllerName);
