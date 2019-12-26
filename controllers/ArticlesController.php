@@ -28,27 +28,11 @@ class ArticlesController  extends  Controller {
 
     public function actionIndex()
     {
-
-
-        if(isset($_POST['data'])) {
-            $this->sqrc= $_POST['data'] ;
-       //     ob_start();
-       //     $pagination= $this->getArticles();
-        //    $articles=$this->articles;
-       //    require_once(ROOT . '/views/index.php');
-
-         //   $content = ob_get_contents();
-
-// отключаем и очищаем буфер
-      //     ob_end_clean();
-
-
-      //      return $res;
-        }
-
-            $pagination= $this->getArticles($this->sqrc);
+if(isset($_SESSION['view'])&& $_SESSION['view'] !="") {
+    $this->sqr=$_SESSION['view'];
+}
+            $pagination= $this->getArticles($this->sqr);
         $articles=$this->articles;
-
 
 
       require_once(ROOT . '/views/index.php');
@@ -58,6 +42,37 @@ class ArticlesController  extends  Controller {
 
 
        return true;
+
+    }
+
+
+    public function actionChange() {
+
+        if(isset($_POST['data']) ) {
+            $_SESSION['view']=$_POST['data'] ;
+            $this->sqr= $_POST['data'] ;
+            $answer='';
+            ob_start();
+            $pagination= $this->getArticles($this->sqr);
+            $articles=$this->articles;
+            require_once(ROOT . '/views/change.php');
+
+           $response = ob_get_contents();
+
+// отключаем и очищаем буфер
+            ob_end_clean();
+
+       // $saab=json_encode($responseText);
+          //  $responseText='response'.':' .$response ;
+         //  $myArr = array("John", "Mary", "Peter", "Sally");
+          //  $answer="Hi, it is me, Vovka"
+
+
+              echo $response;
+              return true;
+
+          // return response()->json(['answer'=> $answer]);
+        }
 
     }
 
@@ -86,7 +101,7 @@ class ArticlesController  extends  Controller {
                 Articles::addArticlesItem();
             }
 
-            $pagination = $this->getArticles($this->sqrc);
+            $pagination = $this->getArticles($this->sqr);
             $articles = $this->articles;
 
             require_once(ROOT . '/views/adminList.php');
@@ -99,7 +114,7 @@ class ArticlesController  extends  Controller {
            if ($message == 'not_admin') {
                $_SESSION['message'] = 'Не правильные идентификационные данные !';
 
-               $pagination = $this->getArticles($this->sqrc);
+               $pagination = $this->getArticles($this->sqr);
                $articles = $this->articles;
 
                require_once(ROOT . '/views/default.php');
@@ -108,7 +123,7 @@ class ArticlesController  extends  Controller {
 
            if ($message == 'admin') {
                 $this->key="admin";
-               $pagination = $this->getArticles($this->sqrc);
+               $pagination = $this->getArticles($this->sqr);
                $articles = $this->articles;
 
                require_once(ROOT . '/views/adminList.php');

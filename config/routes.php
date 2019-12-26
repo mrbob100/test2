@@ -1,7 +1,7 @@
 <?php
 
     return array(
-
+        "change"=>"articles/change",
         "form"=>"articles/add",
         "tes2&page"=>"articles/index",
         "test2"=>"articles/index",

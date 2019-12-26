@@ -18,10 +18,10 @@ class Controller
       }
    */
 
-    protected $sqrc = "app";
+    public $sqr = "app";
     protected $articles = "";
     protected $pagination = "";
-    protected $records_per_page = 4;
+    protected $records_per_page = 3;
     protected $key="";
    public $pageTpl='/views/index.php';
 

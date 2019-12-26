@@ -56,21 +56,21 @@ class Articles
 
 
         if($kind=='app') {
-            $result = $db->query('SELECT articles.id, user_id, name, text, status, email FROM articles, users WHERE user_id=users.id  ORDER BY id ASC');
+            $result = $db->query('SELECT articles.id, user_id, name, text, status, email FROM articles, users WHERE user_id=users.id  ORDER BY id ASC ');
                          }
         if($kind=='oran'){
-            $result = $db->query('SELECT articles.id, user_id, name, text, status, email FROM articles, users WHERE user_id=users.id  ORDER BY FIELD(user_id ) ASC');
+            $result = $db->query('SELECT articles.id, user_id, name, text, status, email FROM articles, users WHERE user_id=users.id  ORDER BY articles.user_id  ASC ');
         }
         if($kind=='pine') {
-           $result = $db->query('SELECT articles.id, user_id, name, text, status, users.email FROM articles, users WHERE user_id=users.id  ORDER BY articles.name ASC');
-          // $result = $db->query( 'SELECT * FROM articles,  AS a LEFT JOIN users AS m  ON a.user_id=m.id ORDERED BY `a.name`');
-        }  /*else {
+           $result = $db->query('SELECT articles.id, user_id, name, text, status, users.email FROM articles, users WHERE user_id=users.id  ORDER BY articles.name ASC ');
 
-            $result = $db->query('SELECT articles.id, user_id, name, text, status, email FROM articles, users WHERE user_id=users.id  ORDER BY id ASC');
-        } */
+          // $result = $db->query( 'SELECT * FROM articles,  AS a LEFT JOIN users AS m  ON a.user_id=m.id ORDERED BY `a.name`');
+        }
+
 
         $i = 0;
         while($row = $result->fetch()) {
+            if($row['name']=='admin') continue;
             $ArticleList[$i]['id'] = $row['id'];
             $ArticleList[$i]['user_id'] = $row['email'];
             $ArticleList[$i]['name'] = $row['name'];

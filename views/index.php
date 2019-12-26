@@ -32,6 +32,7 @@
                 <div class="col-sm-12">
 
                     <div>
+
                         <?php if ($_SESSION['message'])  echo ($_SESSION['message'])?>
 
 
@@ -42,7 +43,7 @@
                 <div> </div>
 
                     <select id="mySelect" onchange="fun1()">
-
+                        <option value="app">Сортировка      </option>
                         <option value="app">Сортировка по id</option>
                         <option value="oran">Сортировка по user_id</option>
                         <option value="pine">Сортировка по name</option>
@@ -65,7 +66,7 @@
                                 </thead>
 
 
-                                <tbody>
+                                <tbody class="change">
 
 
                                 <?php foreach( $articles as $item): ?>
@@ -108,35 +109,10 @@
 
 
 
-<script>
-    function fun1() {
-        let sel=document.querySelector('#mySelect').selectedIndex;
-        let options=document.querySelector('#mySelect').options;
-     //  alert('Выбрана опция '+options[sel].text+' '+options[sel].value);
-        let xhr = new XMLHttpRequest();
-          let data= 'data='+options[sel].value;
-        alert('Выбрана опция  '+ data);
-
-        xhr.open('POST', '?option=test2' , false);
-
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-        xhr.send(data);
 
 
-        if (xhr.status != 200) {
-
-            alert( xhr.status + ': ' + xhr.statusText ); // пример вывода: 404: Not Found
-        } else {
-            // вывести результат
-         // out.innerHTML=xhr.responseText ; // responseText -- текст ответа.
-           // alert( xhr.statusText );
-            console.log('ответ--',xhr.responseText);
-
-        }
-    }
+    <script type="text/javascript" src="js/script.js" ></script>
 
 
-</script>
 </body>
 </html>
